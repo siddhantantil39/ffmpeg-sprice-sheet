@@ -14,5 +14,25 @@
       "name": "sprint.servelt.multipart.enabled",
       "type": "java.lang.String",
       "description": "Description for sprint.servelt.multipart.enabled."
+    },
+    {
+      "name": "cloud.aws.credentials.accessKey",
+      "type": "java.lang.String",
+      "description": "Description for cloud.aws.credentials.accessKey."
+    },
+    {
+      "name": "cloud.aws.credentials.secretKey",
+      "type": "java.lang.String",
+      "description": "Description for cloud.aws.credentials.secretKey."
+    },
+    {
+      "name": "cloud.aws.region.static",
+      "type": "java.lang.String",
+      "description": "Description for cloud.aws.region.static."
+    },
+    {
+      "name": "cloud.aws.s3.bucket",
+      "type": "java.lang.String",
+      "description": "Description for cloud.aws.s3.bucket."
     }
   ] }

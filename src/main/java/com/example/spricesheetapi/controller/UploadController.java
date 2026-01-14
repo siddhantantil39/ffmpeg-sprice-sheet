@@ -23,12 +23,17 @@ public class UploadController {
         this.storageService = storageService;
     };
 
-    @PostMapping(value = "/", consumes = "application/octet-stream")
+    @PostMapping(consumes = "application/octet-stream")
     public ResponseEntity<String> upload(
         @RequestParam("uploadId")  String uploadId,
         @RequestParam("partNumber") int partNumber,
         HttpServletRequest request
     ) throws IOException{
+        long contentLength = request.getContentLengthLong();
+        if (contentLength <= 0) {
+            return ResponseEntity.badRequest().body("Missing Content-Length");
+        }
+
         try(InputStream inputStream = request.getInputStream()){
             storageService.store(inputStream, partNumber, uploadId);
         }
