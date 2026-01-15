@@ -1,5 +1,6 @@
 package com.example.spricesheetapi.controller;
 
+import com.example.spricesheetapi.contract.AwsService;
 import com.example.spricesheetapi.contract.StorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +18,37 @@ import java.io.InputStream;
 public class UploadController {
 
     private final StorageService storageService;
+    private final AwsService awsService;
 
     @Autowired
-    public UploadController(StorageService storageService){
+    public UploadController(StorageService storageService,  AwsService awsService) {
         this.storageService = storageService;
+        this.awsService = awsService;
     };
 
     @PostMapping(consumes = "application/octet-stream")
     public ResponseEntity<String> upload(
         @RequestParam("uploadId")  String uploadId,
         @RequestParam("partNumber") int partNumber,
+        @RequestParam("objectKey") String objectKey,
         HttpServletRequest request
     ) throws IOException{
         long contentLength = request.getContentLengthLong();
+        String contentType = request.getContentType();
         if (contentLength <= 0) {
             return ResponseEntity.badRequest().body("Missing Content-Length");
         }
 
-        try(InputStream inputStream = request.getInputStream()){
-            storageService.store(inputStream, partNumber, uploadId);
-        }
-
-        return ResponseEntity.ok("File uploaded");
+        InputStream inputStream = request.getInputStream();
+            awsService.store(
+                    contentLength,
+                    contentType,
+                    inputStream,
+                    uploadId,
+                    partNumber,
+                    objectKey
+            );
+        return ResponseEntity.ok("Part uploaded");
     }
 
 }
